@@ -94,7 +94,7 @@ function generateRootDemo({
     filterComp = [],
 } = {}, depsCompSet) {
     const compFolder = srcFolder + '/components';
-    child_process.execSync(`rm -f ${compFolder}/index.ts && rm -f ${compFolder}/style.ts`);
+    child_process.execSync(`rimraf ${compFolder}/index.ts && rimraf ${compFolder}/style.ts`);
     const normalizeFilterComp = Array.isArray(filterComp)
         ? [...filterComp]
         : [];
@@ -306,6 +306,7 @@ function generateDemo(options = {
     const { siteFolder = 'sites/pages', languages = ['ch', 'en'], ...restParams} = options;
     const depsCompSet = new Set();
     const sitePath = path.join(rootPath, siteFolder);
+    console.log(`>>> Start generate demo files...`);
     child_process.execSync(`rimraf ${sitePath}`);
     languages.map(lang => generateSiteDemo({...restParams, depsCompSet, siteFolder, language: lang}));
     generateRootDemo(options, depsCompSet);
