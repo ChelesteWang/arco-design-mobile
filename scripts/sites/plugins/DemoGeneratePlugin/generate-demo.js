@@ -160,14 +160,14 @@ function generateSiteDemo({
     const normalizeFilterComp = Array.isArray(filterComp)
         ? [...filterComp]
         : [];
-        const sitePath = path.join(rootPath, siteFolder);
+    const sitePath = path.join(rootPath, siteFolder);
     const compPath = path.join(rootPath, compFolder);
     const compNames = fs.readdirSync(path.join(compPath)).filter(name => {
         return fs.lstatSync(path.join(compPath, name)).isDirectory();
     });
     const suffix = language in languageUtils.lang2SuffixMap ? languageUtils.lang2SuffixMap[language] : '';
-    const mdSuffix = suffix ? `.${suffix}`: suffix;
-    const tsxFileSuffix = suffix ? `-${suffix}`: suffix;
+    const mdSuffix = suffix ? `.${suffix}` : suffix;
+    const tsxFileSuffix = suffix ? `-${suffix}` : suffix;
     const demoCompSet = new Set();
     let compDocsImportStr = '';
     let compDocsStr = '';
@@ -303,13 +303,17 @@ function generateDemo(options = {
     filterComp: [],
     languages: ['ch', 'en']
 }) {
-    const { siteFolder = 'sites/pages', languages = ['ch', 'en'], ...restParams} = options;
+    const { siteFolder = 'sites/pages', languages = ['ch', 'en'], ...restParams } = options;
     const depsCompSet = new Set();
     const sitePath = path.join(rootPath, siteFolder);
     console.log(`>>> Start generate demo files...`);
     child_process.execSync(`rimraf ${sitePath}`);
-    languages.map(lang => generateSiteDemo({...restParams, depsCompSet, siteFolder, language: lang}));
+    console.log(`>>> Clean demo files finished.`);
+    console.log(`>>> Start generate demo entry files...`);
+    languages.map(lang => generateSiteDemo({ ...restParams, depsCompSet, siteFolder, language: lang }));
+    console.log(`>>> Generate demo entry files finished.`);
     generateRootDemo(options, depsCompSet);
+    console.log(`>>> Generate demo files finished.`);
 }
 
 module.exports = generateDemo;
