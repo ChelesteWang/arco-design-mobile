@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const child_process = require('child_process');
 const utils = require('../utils');

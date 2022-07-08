@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const utils = require('../../../utils');
 const localeMap = require('../../../utils/language.json');
 
