@@ -5,6 +5,7 @@ const { generateComponents } = require('./generate-components');
 // const { generateResource } = require('./generate-resource');
 const rootPath = path.resolve(__dirname, '../../../../');
 const languageUtils = require('../../../utils/language');
+const fs = require('fs-extra');
 
 function generateSite({
     compPageFolder = 'sites/pc/pages/components',
@@ -32,7 +33,7 @@ function generateSite({
     generateGuide(guidePagePath, srcPath, tokenInfo, path.resolve('sites/pc/static/md'), languages);
     languages.map(lang => {
         generateComponents(compSrcPath, compPagePath, lang);
-    })
+    });
     // generateResource(resourcePagePath, docPath);
 }
 
