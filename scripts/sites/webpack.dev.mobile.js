@@ -19,7 +19,7 @@ const devConfig = merge(baseConfig, {
     entry: {
         index: path.join(sitePath, 'mobile/entry/index.tsx'),
         // 这里加上token是为了监听到js变化
-        token: path.resolve(__dirname, '../../packages/arcodesign/tokens/src/arcodesign/index.js'),
+        token: path.resolve(__dirname, '../../packages/arcodesign/tokens/app/arcodesign/index.js'),
     },
     output: {
         path: '/',
