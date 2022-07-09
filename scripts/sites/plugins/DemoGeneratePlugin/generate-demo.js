@@ -27,7 +27,9 @@ function renderSource(
         const filename = `_${utils.getCompName(demoName)}`;
         const content = `import React from 'react';
 ${code.replace(reg, `../../../${compFolder}`).replace(/\/esm\//g, '/')}`;
-        child_process.execSync(`make-dir ${sitePath}/${comp}`);
+
+        fs.mkdirpSync(`${sitePath}/${comp}`);
+        // child_process.execSync(`make-dir ${sitePath}/${comp}`);
         fs.writeFile(path.join(docPath, `${filename}.js`), content, () => {
             console.log(`>>> Write demo file finished: ${comp}/${filename}`);
         });
@@ -94,7 +96,10 @@ function generateRootDemo({
     filterComp = [],
 } = {}, depsCompSet) {
     const compFolder = srcFolder + '/components';
-    child_process.execSync(`rimraf ${compFolder}/index.ts && rimraf ${compFolder}/style.ts`);
+
+    fs.removeSync(`${compFolder}/index.ts`);
+    fs.removeSync(`${compFolder}/style.ts`);
+    // child_process.execSync(`rimraf ${compFolder}/index.ts && rimraf ${compFolder}/style.ts`);
     const normalizeFilterComp = Array.isArray(filterComp)
         ? [...filterComp]
         : [];
@@ -307,7 +312,8 @@ function generateDemo(options = {
     const depsCompSet = new Set();
     const sitePath = path.join(rootPath, siteFolder);
     console.log(`>>> Start generate demo files...`);
-    child_process.execSync(`rimraf ${sitePath}`);
+    fs.removeSync(` ${sitePath}`);
+    // child_process.execSync(`rimraf ${sitePath}`);
     console.log(`>>> Clean demo files finished.`);
     console.log(`>>> Start generate demo entry files...`);
     languages.map(lang => generateSiteDemo({ ...restParams, depsCompSet, siteFolder, language: lang }));

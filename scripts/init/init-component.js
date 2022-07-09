@@ -47,7 +47,9 @@ function copyFile() {
         console.error('组件已存在，换个名字吧~');
         return;
     }
-    child_process.execSync(`make-dir ${compPathName}/${compName} && cpr scripts/init/_template_/* ${compPathName}/${compName}`);
+    // child_process.execSync(`make-dir ${compPathName}/${compName} && cpr scripts/init/_template_/* ${compPathName}/${compName}`);
+    fs.mkdirpSync(`${compPathName}/${compName}`);
+    fs.copySync('scripts/init/_template_/*', `${compPathName}/${compName}`);
     changeFile(newCompPath, compName);
 }
 

@@ -129,5 +129,5 @@ function buildCss(uglify) {
     await Promise.all([buildJs(), buildCss(), buildJs(true), buildCss(true)]).catch(e => {
         console.error(e);
     });
-    childProcess.execSync(`rimraf ${path.resolve(__dirname, 'dist/style*.js')}`);
+    fs.emptyDirSync(path.resolve(__dirname, 'dist/style*.js'));
 })();

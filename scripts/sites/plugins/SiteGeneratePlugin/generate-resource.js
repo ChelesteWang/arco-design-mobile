@@ -30,9 +30,13 @@ function generateResource(resourcePagePath, docPath) {
     const hooksSourceOutput = path.join(resourcePagePath, 'hooks');
     const utilsSourceOutput = path.join(resourcePagePath, 'utils');
     const mixinSourceOutput = path.join(resourcePagePath, 'mixin');
-    childProcess.execSync(
-        `rimraf ${resourcePagePath} && make-dir ${hooksSourceOutput} && make-dir ${utilsSourceOutput} && make-dir ${mixinSourceOutput}`,
-    );
+    fs.removeSync(resourcePagePath)
+    fs.mkdirpSync(hooksSourceOutput);
+    fs.mkdirpSync(utilsSourceOutput);
+    fs.mkdirpSync(mixinSourceOutput);
+    // childProcess.execSync(
+    //     `rimraf ${resourcePagePath} && make-dir ${hooksSourceOutput} && make-dir ${utilsSourceOutput} && make-dir ${mixinSourceOutput}`,
+    // );
     const hooksSource = fs.readdirSync(hooksSourceMdPath);
     const utilsSource = fs.readdirSync(utilsSourceMdPath);
     const mixinSource = fs.readdirSync(mixinSourceMdPath);

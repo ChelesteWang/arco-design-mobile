@@ -13,10 +13,10 @@ function generateComponents(compSrcPath, compPagePath, language) {
     let npmVersion = '0.0.0';
     try {
         npmVersion = childProcess.execSync('npm show @arco-design/mobile-react version').toString().trim();
-    } catch (e) {}
+    } catch (e) { }
     const suffix = language in languageUtils.lang2SuffixMap ? languageUtils.lang2SuffixMap[language] : '';
-    const mdSuffix = suffix ? `.${suffix}`: suffix;
-    const tsxFileSuffix = suffix ? `-${suffix}`: suffix;
+    const mdSuffix = suffix ? `.${suffix}` : suffix;
+    const tsxFileSuffix = suffix ? `-${suffix}` : suffix;
     const importName = utils.getCompName(`icon${tsxFileSuffix}`);
     let compDocsImportStr = `import ${importName} from './icon${tsxFileSuffix ? `/index${tsxFileSuffix}` : ''}';\n`;
     let compDocsStr = `    'icon': ${importName},\n`;
@@ -25,7 +25,7 @@ function generateComponents(compSrcPath, compPagePath, language) {
 
 
     compNames.forEach(comp => {
-        if(comp === 'locale') {
+        if (comp === 'locale') {
             return;
         }
         // 内部工具js不处理
@@ -106,7 +106,8 @@ export default function Demo({ language = LanguageSupport.CH}: IProps) {
     );
 }
 `;
-        childProcess.execSync(`make-dir ${docPath}`);
+        fs.mkdirpSync(docPath)
+        // childProcess.execSync(`make-dir ${docPath}`);
         fs.writeFile(path.join(docPath, `index${tsxFileSuffix}.tsx`), entry, () => {
             console.log(`>>> Write sites file finished: ` + comp);
         });

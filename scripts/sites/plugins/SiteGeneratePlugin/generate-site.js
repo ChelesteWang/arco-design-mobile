@@ -21,9 +21,13 @@ function generateSite({
     const guidePagePath = path.join(rootPath, guidePageFolder);
     const resourcePagePath = path.join(rootPath, resourcePageFolder);
     // 更新内容
-    childProcess.execSync(`rimraf ${compPagePath} && make-dir ${compPagePath}`);
-    childProcess.execSync(`rimraf ${guidePagePath} && make-dir ${guidePagePath}`);
-    childProcess.execSync(`rimraf ${resourcePagePath} && make-dir ${resourcePagePath}`);
+
+    fs.removeSync(compPagePath);
+    fs.removeSync(guidePagePath);
+    fs.removeSync(resourcePagePath);
+    fs.mkdirpSync(compPagePath);
+    fs.mkdirpSync(guidePagePath);
+    fs.mkdirpSync(resourcePagePath);
 
     generateGuide(guidePagePath, srcPath, tokenInfo, path.resolve('sites/pc/static/md'), languages);
     languages.map(lang => {

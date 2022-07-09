@@ -108,7 +108,8 @@ export default function Demo({ language = LanguageSupport.CH}: IProps) {
 
     const docPath = path.join(rootPath, 'sites/pc/pages/components', 'icon');
 
-    childProcess.execSync(`make-dir ${docPath}`);
+    fs.mkdirpSync(docPath);
+    // childProcess.execSync(`make-dir ${docPath}`);
     fs.writeFile(path.join(docPath, `index${tsxFileSuffix}.tsx`), demoCode, () => {
         console.log(`>>> Write IconComp Success`);
     });
