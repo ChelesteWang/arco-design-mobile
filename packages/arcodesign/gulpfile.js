@@ -92,15 +92,12 @@ function moveCss() {
                 const newPath = path.join(type, path.dirname(file), 'css');
                 fs.mkdirpSync(newPath);
                 fs.copySync(filePath, newPath);
-                // childProcess.execSync(`make-dir ${newPath} && cp ${filePath} ${newPath}`);
             });
         });
         fs.removeSync('_temp_style_');
-        // childProcess.execSync('rimraf _temp_style_');
     } catch (e) {
         console.error(e);
         fs.removeSync('_temp_style_');
-        // childProcess.execSync('rimraf _temp_style_');
     }
     return Promise.resolve();
 }
@@ -128,15 +125,12 @@ function moveCssEntry() {
                 const newPath = path.join(type, path.dirname(file), 'css');
                 fs.mkdirpSync(newPath);
                 fs.copySync(filePath, newPath);
-                // childProcess.execSync(`make-dir ${newPath} && cp ${filePath} ${newPath}`);
             });
         });
         fs.removeSync('_temp_style_entry_');
-        // childProcess.execSync('rimraf _temp_style_entry_');
     } catch (e) {
         console.error(e);
         fs.removeSync('_temp_style_entry_');
-        // childProcess.execSync('rimraf _temp_style_entry_');
     }
     return Promise.resolve();
 }

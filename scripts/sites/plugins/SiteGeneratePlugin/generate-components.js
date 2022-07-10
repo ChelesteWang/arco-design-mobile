@@ -107,7 +107,6 @@ export default function Demo({ language = LanguageSupport.CH}: IProps) {
 }
 `;
         fs.mkdirpSync(docPath)
-        // childProcess.execSync(`make-dir ${docPath}`);
         fs.writeFile(path.join(docPath, `index${tsxFileSuffix}.tsx`), entry, () => {
             console.log(`>>> Write sites file finished: ` + comp);
         });

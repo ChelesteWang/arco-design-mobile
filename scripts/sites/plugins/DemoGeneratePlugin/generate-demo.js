@@ -29,7 +29,6 @@ function renderSource(
 ${code.replace(reg, `../../../${compFolder}`).replace(/\/esm\//g, '/')}`;
 
         fs.mkdirpSync(`${sitePath}/${comp}`);
-        // child_process.execSync(`make-dir ${sitePath}/${comp}`);
         fs.writeFile(path.join(docPath, `${filename}.js`), content, () => {
             console.log(`>>> Write demo file finished: ${comp}/${filename}`);
         });
@@ -99,7 +98,6 @@ function generateRootDemo({
 
     fs.removeSync(`${compFolder}/index.ts`);
     fs.removeSync(`${compFolder}/style.ts`);
-    // child_process.execSync(`rimraf ${compFolder}/index.ts && rimraf ${compFolder}/style.ts`);
     const normalizeFilterComp = Array.isArray(filterComp)
         ? [...filterComp]
         : [];
@@ -313,7 +311,6 @@ function generateDemo(options = {
     const sitePath = path.join(rootPath, siteFolder);
     console.log(`>>> Start generate demo files...`);
     fs.removeSync(` ${sitePath}`);
-    // child_process.execSync(`rimraf ${sitePath}`);
     console.log(`>>> Clean demo files finished.`);
     console.log(`>>> Start generate demo entry files...`);
     languages.map(lang => generateSiteDemo({ ...restParams, depsCompSet, siteFolder, language: lang }));
