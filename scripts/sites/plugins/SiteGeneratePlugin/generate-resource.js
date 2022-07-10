@@ -211,7 +211,7 @@ export default function Demo() {
         }
     });
     try {
-        childProcess.execSync(`make-dir ${outputFolder}`);
+        fs.mkdirpSync(outputFolder);
         mdFileStr +=
             pageStr +
             `

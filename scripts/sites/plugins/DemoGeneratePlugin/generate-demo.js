@@ -95,7 +95,6 @@ function generateRootDemo({
     filterComp = [],
 } = {}, depsCompSet) {
     const compFolder = srcFolder + '/components';
-
     fs.removeSync(`${compFolder}/index.ts`);
     fs.removeSync(`${compFolder}/style.ts`);
     const normalizeFilterComp = Array.isArray(filterComp)
@@ -310,7 +309,7 @@ function generateDemo(options = {
     const depsCompSet = new Set();
     const sitePath = path.join(rootPath, siteFolder);
     console.log(`>>> Start generate demo files...`);
-    fs.removeSync(` ${sitePath}`);
+    fs.removeSync(sitePath);
     console.log(`>>> Clean demo files finished.`);
     console.log(`>>> Start generate demo entry files...`);
     languages.map(lang => generateSiteDemo({ ...restParams, depsCompSet, siteFolder, language: lang }));
