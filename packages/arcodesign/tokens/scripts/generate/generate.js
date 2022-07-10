@@ -104,7 +104,7 @@ function generateToken({ appName = 'arcodesign', outputFilter } = {}) {
     }
     const coreTokenContent = fs.readFileSync(path.join(rootPath, 'src/arcodesign/default/index.js'), 'utf-8');
     const tokenOutputRootPath = path.join(rootPath, 'app', appName);
-    fs.removeSync(tokenRootPath);
+    fs.removeSync(tokenOutputRootPath);
     fs.mkdirpSync(tokenOutputRootPath);
     const themes = fs.readdirSync(tokenRootPath).filter(name => {
         return fs.lstatSync(path.join(tokenRootPath, name)).isDirectory();

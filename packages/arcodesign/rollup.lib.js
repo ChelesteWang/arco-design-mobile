@@ -129,5 +129,6 @@ function buildCss(uglify) {
     await Promise.all([buildJs(), buildCss(), buildJs(true), buildCss(true)]).catch(e => {
         console.error(e);
     });
-    fs.emptyDirSync(path.resolve(__dirname, 'dist/style*.js'));
+    fs.removeSync(path.resolve(__dirname, 'dist/style.js'));
+    fs.removeSync(path.resolve(__dirname, 'dist/style.min.js'));
 })();

@@ -101,7 +101,7 @@ export default function Demo({ language = LanguageSupport.CH}: IProps) {
     );
 }
 `;
-        fs.mkdirpSync(docPath)
+        fs.mkdirpSync(docPath);
         fs.writeFile(path.join(docPath, `index${tsxFileSuffix}.tsx`), entry, () => {
             console.log(`>>> Write sites file finished: ` + comp);
         });

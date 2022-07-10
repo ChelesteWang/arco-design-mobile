@@ -30,7 +30,7 @@ ${code.replace(reg, `../../../${compFolder}`).replace(/\/esm\//g, '/')}`;
 
         fs.mkdirpSync(`${sitePath}/${comp}`);
         fs.writeFile(path.join(docPath, `${filename}.js`), content, () => {
-            console.log(`>>> Write demo file finished: ${comp}/${filename}`);
+            // console.log(`>>> Write demo file finished: ${comp}/${filename}`);
         });
 
         const res = [...code.matchAll(/import {([^}]+)} from '@arco-design\/mobile-react';/g)];
@@ -273,7 +273,7 @@ export default function Demo() {
             demoCompSet.add(comp);
         }
         fs.writeFile(path.join(docPath, `index${tsxFileSuffix}.tsx`), entry, () => {
-            console.log(`>>> Write demo file finished: ` + comp);
+            // console.log(`>>> Write demo file finished: ` + comp);
         });
     });
 

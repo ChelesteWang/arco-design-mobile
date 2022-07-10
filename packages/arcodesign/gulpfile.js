@@ -91,7 +91,7 @@ function moveCss() {
                 const filePath = path.join('_temp_style_', file);
                 const newPath = path.join(type, path.dirname(file), 'css');
                 fs.mkdirpSync(newPath);
-                fs.copySync(filePath, newPath);
+                fs.copySync(filePath, path.join(newPath, path.basename(file)));
             });
         });
         fs.removeSync('_temp_style_');
@@ -124,7 +124,7 @@ function moveCssEntry() {
                 const filePath = path.join('_temp_style_entry_', type, file);
                 const newPath = path.join(type, path.dirname(file), 'css');
                 fs.mkdirpSync(newPath);
-                fs.copySync(filePath, newPath);
+                fs.copySync(filePath, path.join(newPath, path.basename(file)));
             });
         });
         fs.removeSync('_temp_style_entry_');

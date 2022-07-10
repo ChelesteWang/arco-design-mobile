@@ -48,7 +48,7 @@ function copyFile() {
         return;
     }
     fs.mkdirpSync(`${compPathName}/${compName}`);
-    fs.copySync('scripts/init/_template_/*', `${compPathName}/${compName}`);
+    fs.copySync('scripts/init/_template_', `${compPathName}/${compName}`);
     changeFile(newCompPath, compName);
 }
 

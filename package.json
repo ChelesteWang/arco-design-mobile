@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "init": "lerna bootstrap -- --legacy-peer-deps",
-    "add": "node scripts/init/init-component.js $1",
-    "start": "cross-env NODE_ENV=development cross-env FILTER_COMP=$@  webpack-dev-server --colors --progress --config scripts/sites/webpack.dev.mobile.js",
+    "add": "node scripts/init/init-component.js",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --colors --progress --config scripts/sites/webpack.dev.mobile.js",
     "start:pc": "cross-env NODE_ENV=development webpack-dev-server --colors --progress --config scripts/sites/webpack.dev.pc.js",
     "start:home": "cross-env NODE_ENV=development webpack-dev-server --colors --progress --config scripts/sites/webpack.dev.home.js",
     "start:all": "npm start & npm run start:pc & npm run start:home",
