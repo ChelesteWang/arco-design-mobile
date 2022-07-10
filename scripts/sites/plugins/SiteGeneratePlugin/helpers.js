@@ -1,5 +1,5 @@
 const prism = require('../../../../sites/pc/static/js/prism');
-const marked = require('marked');
+const { marked } = require('marked');
 const fs = require('fs-extra');
 const path = require('path');
 const utils = require('../.././../utils');
