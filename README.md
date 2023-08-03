@@ -1,16 +1,23 @@
 <div align="center">
-  <a href="https://arco.design/mobile/react" target="_blank">
-    <img alt="Arco Design Logo" width="200" src="https://avatars.githubusercontent.com/u/64576149?s=200&v=4"/>
-  </a>
+    <a href="https://arco.design/mobile/react" target="_blank">
+        <img alt="Arco Design Logo" width="200" src="https://avatars.githubusercontent.com/u/64576149?s=200&v=4"/>
+    </a>
 </div>
 <div align="center">
-  <h1>Arco Design Mobile</h1>
+    <h1>Arco Design Mobile</h1>
 </div>
 
 <div align="center">
 
 A comprehensive React UI components library based on the [Arco Design](https://arco.design/mobile/react) system.
 
+![](https://img.shields.io/badge/-Less-%23CC6699?style=flat-square&logo=less&logoColor=ffffff)
+![](https://img.shields.io/badge/-Typescript-blue?logo=typescript&logoColor=white)
+![](https://img.shields.io/badge/-React.js-blue?logo=react&logoColor=white)
+
+
+![](https://img.shields.io/npm/v/@arco-design/mobile-react.svg?style=flat-square)
+![](https://img.shields.io/npm/dm/@arco-design/mobile-react.svg?style=flat-square)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/arco-design/arco-design-mobile/blob/main/LICENSE)
 
 </div>
@@ -69,7 +76,7 @@ ReactDOM.render(<App />, document.getElementById('app'));
 
 * [Documentation website](https://arco.design/mobile/react)
 * [Components documentation](https://arco.design/mobile/react/arco-design/pc/)
-* [Figma component library](https://www.figma.com/file/hXylPuOK09Lm2GpS8IsTrh/Arco-Design-Mobile)
+* [Figma component library](https://www.figma.com/community/file/1143750379727993941)
 * [Awesome Arco](https://github.com/arco-design/awesome-arco)
 
 # Browser Support
@@ -84,6 +91,22 @@ Developers interested in contributing should read the [Code of Conduct](./CODE_O
 
 Thank you to all the people who already contributed to Arco Design Mobile!
 
+<a href="https://github.com/arco-design/arco-design-mobile/graphs/contributors"><img src="https://contrib.rocks/image?repo=arco-design/arco-design-mobile" style="height: 50px" /></a>
+
+And our former comrades:
+
+<a href="https://github.com/wuyadream"><img src="https://github.com/wuyadream.png" style="height: 50px; border-radius: 50%" /></a>
+<a href="https://github.com/Ariussssss"><img src="https://github.com/Ariussssss.png" style="height: 50px; border-radius: 50%" /></a>
+<a href="https://github.com/WindyZYY"><img src="https://github.com/WindyZYY.png" style="height: 50px; border-radius: 50%" /></a>
+<a href="https://github.com/10000lance"><img src="https://github.com/10000lance.png" style="height: 50px; border-radius: 50%" /></a>
+<a href="https://github.com/GitHubzhangshuai"><img src="https://github.com/GitHubzhangshuai.png" style="height: 50px; border-radius: 50%" /></a>
+
 # License
 
 This project is [MIT licensed](./LICENSE).
+
+<br/><br/>
+
+<div align="center">
+    <a href="https://star-history.com/#arco-design/arco-design-mobile&Date"><img src="https://api.star-history.com/svg?repos=arco-design/arco-design-mobile&type=Date" style="max-width: 100%; width: 550px"/></a>
+</div>

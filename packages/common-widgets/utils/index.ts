@@ -11,6 +11,7 @@ export * from './color';
 export * from './browser';
 export * from './locale';
 export * from './date';
+export * from './validator';
 
 export function handleUnit(value: number | string) {
     return typeof value === 'number' || !isNaN(Number(value)) ? `${value}px` : value;
@@ -21,6 +22,7 @@ export function arrayTreeFilter<T>(
     filterFn: (item: T, level: number) => boolean,
     options?: {
         childrenKeyName?: string;
+        fallbackChildIndex?: number;
     },
 ) {
     options = options || {};
@@ -30,8 +32,10 @@ export function arrayTreeFilter<T>(
     let level = 0;
 
     do {
-        const foundItem: T = children.filter(item => filterFn(item, level))[0];
-
+        let foundItem: T | undefined = children.find(item => filterFn(item, level));
+        if (!foundItem && options.fallbackChildIndex !== undefined) {
+            foundItem = children[options.fallbackChildIndex];
+        }
         if (!foundItem) {
             break;
         }

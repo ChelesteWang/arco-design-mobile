@@ -9,7 +9,7 @@ import React, {
     useMemo,
 } from 'react';
 import { cls, componentWrapper, nextTick } from '@arco-design/mobile-utils';
-import { ContextLayout } from '../context-provider';
+import { ContextLayout, CompWithGlobalContext } from '../context-provider';
 import { OpenBaseProps } from '../masking';
 import Popup, { DirectionType, PopupProps, PopupRef } from '../popup';
 import { open } from './methods';
@@ -162,19 +162,20 @@ const PopupSwiper = forwardRef((props: PopupSwiperProps, ref: Ref<PopupSwiperRef
             const movingFromDirec = allowedDirections.includes(fromDirec) ? fromDirec : '';
             const disDirection = exitDirection || movingFromDirec;
             const direcValue = ['top', 'bottom'].includes(disDirection) ? 'Y' : 'X';
+            const direcRatio = ['bottom', 'right'].includes(disDirection) ? 1 : -1;
             switch (movingFromDirec) {
                 case 'top':
                 case 'bottom':
                     setDistance({
                         direction: direcValue,
-                        value: Math[movingFromDirec === 'top' ? 'min' : 'max'](0, disY),
+                        value: Math.abs(disY) * direcRatio,
                     });
                     break;
                 case 'left':
                 case 'right':
                     setDistance({
                         direction: direcValue,
-                        value: Math[movingFromDirec === 'left' ? 'min' : 'max'](0, disX),
+                        value: Math.abs(disX) * direcRatio,
                     });
                     break;
                 default:
@@ -309,6 +310,8 @@ export function methodsGenerator<P extends OpenBaseProps>(Comp: React.FunctionCo
     };
 }
 
+const PopupSwiperWithGlobalContext = CompWithGlobalContext(PopupSwiper);
+
 /**
  * 基于弹出层(Popup)封装的具有手势关闭功能的弹出层组件，拥有 Popup 组件的其他能力。
  * @en The popup with gesture closing function based on the popup encapsulation, has other capabilities of the Popup component.
@@ -317,4 +320,4 @@ export function methodsGenerator<P extends OpenBaseProps>(Comp: React.FunctionCo
  * @name 可滑动弹出层
  * @name_en PopupSwiper
  */
-export default componentWrapper(PopupSwiper, methodsGenerator(PopupSwiper));
+export default componentWrapper(PopupSwiper, methodsGenerator(PopupSwiperWithGlobalContext));

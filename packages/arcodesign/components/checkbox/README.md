@@ -1,4 +1,4 @@
-### 数据输入
+### 数据录入
 
 # 复选框 Checkbox
 
@@ -54,7 +54,7 @@
 > ValueType
 
 ```
-string|number
+string | number
 ```
 
 > IconType

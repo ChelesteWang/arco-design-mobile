@@ -6,11 +6,13 @@ import { LanguageSupport } from '../../../utils/language';
 import getUrlParam from '../../../utils/getUrlParam';
 import CodePopover from '../../../components/code-popover';
 import Layout from '../layout';
-import { HistoryContext } from '../../entry';
+import { HistoryContext } from '../context';
 import { localeMap } from '../../../utils/locale';
+import toQuery, { parseUrlQuery } from '../../../utils/toQuery';
 import './index.less';
 
 const AnchorLink = Anchor.Link;
+const urlQuery = parseUrlQuery();
 
 export interface IDemoProps {
     name: string;
@@ -18,13 +20,21 @@ export interface IDemoProps {
     type: 'readme' | 'doc';
     showQRCode?: boolean;
     language?: LanguageSupport;
+    route?: string;
 }
 
 export default function Demo(props: IDemoProps) {
-    const { name, doc, type, showQRCode = true, language = LanguageSupport.CH } = props;
+    const {
+        name,
+        doc,
+        type,
+        showQRCode = true,
+        language = LanguageSupport.CH,
+        route = 'components',
+    } = props;
     const [update, setUpdate] = useState(0);
     const previewUrl = `${getUrlsByLanguage(language).MOBILE_DOC_PREFIX}${
-        name === 'readme' ? '' : `components/${name}`
+        name === 'readme' ? '' : `${route}/${name}`
     }`;
     // 是否为 demo icon 页
     const isIcon = name === 'icon';
@@ -142,11 +152,26 @@ export default function Demo(props: IDemoProps) {
         );
     }
 
+    function getIframeSrc() {
+        const urlParts = previewUrl.split('#');
+        const customQuery = toQuery({
+            ...urlQuery,
+            hide_back: hideBack || 1,
+            from_web: 1,
+            ...(isReadMe ? { need_jump: 0 } : {}),
+        });
+        return `${urlParts[0] || ''}?${customQuery}#${urlParts[1] || ''}`;
+    }
+
     useEffect(() => {
         window.addEventListener('message', event => {
-            if (event?.data?.type === 'component') {
+            const routeType = event?.data?.type;
+            if (
+                event?.data?.type === 'components' ||
+                event?.data?.type === 'composite-components'
+            ) {
                 history.push(
-                    `${event?.data?.language === LanguageSupport.EN ? '/en-US' : ''}/components/${
+                    `${event?.data?.language === LanguageSupport.EN ? '/en-US' : ''}/${routeType}/${
                         event.data.data
                     }?hide_back=0`,
                 );
@@ -159,13 +184,7 @@ export default function Demo(props: IDemoProps) {
             {doc}
             {needShowIframe && (
                 <div className="mobile-iframe">
-                    <iframe
-                        src={`${previewUrl}?hide_back=${hideBack || 1}&from_web=1${
-                            isReadMe ? '&need_jump=0' : ''
-                        }`}
-                        title="mobile sites"
-                        key={name}
-                    />
+                    <iframe src={getIframeSrc()} title="mobile sites" key={name} />
                 </div>
             )}
             {update && doc && !isIcon && renderCodePopover()}

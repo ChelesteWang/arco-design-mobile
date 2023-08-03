@@ -7,7 +7,7 @@ import React, {
     useMemo,
     ReactNode,
 } from 'react';
-import { cls } from '@arco-design/mobile-utils';
+import { cls, componentWrapper } from '@arco-design/mobile-utils';
 import { ContextLayout } from '../context-provider';
 import IconStarFill from '../icon/IconStarFill';
 import IconStarHalf from '../icon/IconStarHalf';
@@ -111,14 +111,6 @@ export interface RateRef {
     dom: HTMLDivElement | null;
 }
 
-/**
- * 评分组件，支持受控模式
- * @en Rate component, supports controlled mode
- * @type 数据输入
- * @type_en Data Entry
- * @name 评分
- * @name_en Rate
- */
 const Rate = forwardRef((props: RateProps, ref: Ref<RateRef>) => {
     const {
         className,
@@ -232,8 +224,13 @@ const Rate = forwardRef((props: RateProps, ref: Ref<RateRef>) => {
 
     return (
         <ContextLayout>
-            {({ prefixCls }) => (
+            {({ prefixCls, useRtl }) => (
                 <div
+                    role="slider"
+                    aria-valuemin={0}
+                    aria-valuemax={count}
+                    aria-valuenow={innerValue}
+                    aria-disabled={disabled}
                     className={cls(`${prefixCls}-rate`, className, { disabled })}
                     style={style}
                     ref={domRef}
@@ -242,6 +239,7 @@ const Rate = forwardRef((props: RateProps, ref: Ref<RateRef>) => {
                         // 对内的index从1开始，方便计算
                         // @en The index of the pair starts from 1, which is convenient for calculation
                         const index = i + 1;
+                        const halfIndex = allowHalf ? index - 0.5 : index;
                         const status = getIconStatus(index);
                         return (
                             <div
@@ -253,12 +251,14 @@ const Rate = forwardRef((props: RateProps, ref: Ref<RateRef>) => {
                                 <div
                                     className={`${prefixCls}-rate-icon-click-half left`}
                                     onClick={() =>
-                                        handleStarIndexChange(allowHalf ? index - 0.5 : index)
+                                        handleStarIndexChange(useRtl ? index : halfIndex)
                                     }
                                 />
                                 <div
                                     className={`${prefixCls}-rate-icon-click-half right`}
-                                    onClick={() => handleStarIndexChange(index)}
+                                    onClick={() =>
+                                        handleStarIndexChange(useRtl ? halfIndex : index)
+                                    }
                                 />
                             </div>
                         );
@@ -269,4 +269,13 @@ const Rate = forwardRef((props: RateProps, ref: Ref<RateRef>) => {
     );
 });
 
-export default Rate;
+/**
+ * 评分组件，支持受控模式
+ * @en Rate component, supports controlled mode
+ * @type 数据录入
+ * @type_en Data Entry
+ * @name 评分
+ * @name_en Rate
+ * @displayName Rate
+ */
+export default componentWrapper(Rate, 'Rate');

@@ -3,7 +3,6 @@ import React, {
     forwardRef,
     Ref,
     useImperativeHandle,
-    ReactNodeArray,
     CSSProperties,
     useState,
     useEffect,
@@ -11,67 +10,8 @@ import React, {
 } from 'react';
 import lodashThrottle from 'lodash.throttle';
 import { cls, scrollWithAnimation, getScrollContainerRect } from '@arco-design/mobile-utils';
-import { TabsProps } from '.';
 import { getStyleWithVendor } from '../_helpers';
-
-export interface TabPaneProps
-    extends Pick<
-        TabsProps,
-        | 'duration'
-        | 'transitionDuration'
-        | 'lazyloadCount'
-        | 'hideContentStyle'
-        | 'renderHideContent'
-        | 'mode'
-        | 'tabPaneClass'
-        | 'tabPaneStyle'
-        | 'tabPaneExtra'
-        | 'getScrollContainer'
-        | 'scrollThrottle'
-        | 'scrollOffset'
-        | 'goLastWhenScrollBottom'
-        | 'scrollVertical'
-        | 'translateZ'
-        | 'fullScreen'
-        | 'autoHeight'
-        | 'onScroll'
-    > {
-    prefixCls?: string;
-    panes: ReactNodeArray;
-    activeIndex: number;
-    activeIndexRef: React.MutableRefObject<number>;
-    tabDirection: 'horizontal' | 'vertical';
-    distance: number;
-    wrapWidth: number;
-    wrapHeight: number;
-    handlePaneTouchEnd: (e) => void;
-    paneTrans: boolean;
-    swipeable: boolean;
-    changeIndex: (newIndex: number, from?: string) => void;
-}
-
-export interface TabPaneRef {
-    /**
-     * 外层元素 DOM
-     * @en Outer element DOM
-     */
-    dom: HTMLDivElement | null;
-    /**
-     * 获取当前 transitionDuration
-     * @en Get the current transitionDuration
-     */
-    getTransition: () => number;
-    /**
-     * 滚动到指定 Tab，仅滚动监听模式下可用
-     * @en Scroll to the specified Tab, only available in scroll monitor mode
-     */
-    scrollToIndex: (index: number, rightNow?: boolean) => void;
-    /**
-     * autoHeight=true时，更新当前tabpane高度
-     * @en Update the current tabpane height, which takes effect when autoHeight=true
-     */
-    setCurrentHeight: () => void;
-}
+import { TabPaneProps, TabPaneRef } from './type';
 
 const TabPane = forwardRef((props: TabPaneProps, ref: Ref<TabPaneRef>) => {
     const {
@@ -102,14 +42,17 @@ const TabPane = forwardRef((props: TabPaneProps, ref: Ref<TabPaneRef>) => {
         translateZ,
         fullScreen,
         autoHeight,
+        swipeEnergySaving,
         changeIndex,
         onScroll,
+        rtlRatio,
     } = props;
     const domRef = useRef<HTMLDivElement | null>(null);
     const panesRef = useRef<(HTMLDivElement | null)[]>([]);
     const autoScrollingRef = useRef(false);
     const timerRef = useRef(0);
     const [shownIndexes, setShownIndexes] = useState<[number, number]>([activeIndex, activeIndex]);
+    const [shownActiveIndex, setShownActiveIndex] = useState(activeIndex);
     const prefix = `${prefixCls}-tab-pane`;
     const handleTouchEnd = swipeable ? handlePaneTouchEnd : void 0;
     const [currentPaneHeight, setCurrentPaneHeight] = useState<number | string>('auto');
@@ -198,6 +141,7 @@ const TabPane = forwardRef((props: TabPaneProps, ref: Ref<TabPaneRef>) => {
     }
 
     function calcShownIndexes() {
+        setShownActiveIndex(activeIndex);
         if (typeof lazyloadCount === 'number') {
             setShownIndexes([activeIndex - lazyloadCount, activeIndex + lazyloadCount]);
             return;
@@ -218,12 +162,20 @@ const TabPane = forwardRef((props: TabPaneProps, ref: Ref<TabPaneRef>) => {
         const scrollTop = isGlobal
             ? Math.max(document.documentElement[scrollAttr], document.body[scrollAttr])
             : scrollEle[scrollAttr];
+        const scrollSizeAttr = scrollVertical ? 'scrollHeight' : 'scrollWidth';
+        const sizeAttr = scrollVertical ? 'offsetHeight' : 'offsetWidth';
+        const maxTopDis = isGlobal
+            ? Math.max(document.documentElement[scrollSizeAttr], document.body[scrollSizeAttr]) -
+              scrollTop -
+              (scrollVertical ? window.innerHeight : window.innerWidth)
+            : scrollEle[scrollSizeAttr] - scrollTop - scrollEle[sizeAttr];
+        const normalizedTopDis = Math.min(maxTopDis, topDis);
         clearTimeout(timerRef.current);
         autoScrollingRef.current = true;
         const duration = rightNow ? 0 : transitionDuration || 0;
         scrollWithAnimation(
             scrollTop,
-            scrollTop + topDis,
+            scrollTop + normalizedTopDis,
             top => {
                 if (isGlobal) {
                     document.documentElement[scrollAttr] = top;
@@ -273,7 +225,7 @@ const TabPane = forwardRef((props: TabPaneProps, ref: Ref<TabPaneRef>) => {
                 ? {
                       width: `${100 * panes.length}%`,
                       transform: `translateX(${
-                          distance - wrapWidth * activeIndex
+                          distance - wrapWidth * activeIndex * rtlRatio
                       }px)${translateStr}`,
                   }
                 : {
@@ -289,10 +241,40 @@ const TabPane = forwardRef((props: TabPaneProps, ref: Ref<TabPaneRef>) => {
                   }
                 : {};
         return getStyleWithVendor({
-            ...sizeStyle,
+            ...(swipeEnergySaving ? {} : sizeStyle),
             transitionDuration: `${getTransition()}ms`,
             ...heightStyle,
             ...commonStyle,
+        });
+    }
+
+    function getEnergySavingPaneStyle(index: number): CSSProperties | undefined {
+        if (mode === 'scroll' || !swipeEnergySaving) {
+            return undefined;
+        }
+        if (index !== shownActiveIndex) {
+            return {
+                position: 'absolute',
+                left: '-100%',
+                top: '-100%',
+            };
+        }
+        const translateStr = translateZ ? ' translateZ(0)' : '';
+        const sizeStyle =
+            tabDirection === 'vertical'
+                ? {
+                      transform: `translateX(${
+                          distance - wrapWidth * (activeIndex - index) * rtlRatio
+                      }px)${translateStr}`,
+                  }
+                : {
+                      transform: `translateY(${
+                          distance - wrapHeight * (activeIndex - index)
+                      }px)${translateStr}`,
+                  };
+        return getStyleWithVendor({
+            ...sizeStyle,
+            transitionDuration: `${getTransition()}ms`,
         });
     }
 
@@ -302,25 +284,34 @@ const TabPane = forwardRef((props: TabPaneProps, ref: Ref<TabPaneRef>) => {
             className: cls(prefix, `mode-${mode}`, { 'full-screen': fullScreen }),
             ref: r => (panesRef.current[index] = r),
         };
+        const energySavingStyle = getEnergySavingPaneStyle(index);
         // 是滚动模式或在加载范围内，直接渲染
         // @en Render directly when in scroll mode or in loading scope
         if (mode === 'scroll' || (index >= shownIndexes[0] && index <= shownIndexes[1])) {
-            return <div {...contentProps}>{pane}</div>;
+            return (
+                <div {...contentProps} style={energySavingStyle}>
+                    {pane}
+                </div>
+            );
         }
+        const energySavingHideStyle = {
+            ...energySavingStyle,
+            ...(hideContentStyle || {}),
+        };
         // 不在加载范围内，视renderHideContent和hideContentStyle情况而定
         // @en Not in the loading range, depending on renderHideContent and hideContentStyle
         if (renderHideContent) {
             return (
-                <div {...contentProps} style={hideContentStyle || {}}>
+                <div {...contentProps} style={energySavingHideStyle}>
                     {renderHideContent(index, pane)}
                 </div>
             );
         }
         if (hideContentStyle === null) {
-            return <div {...contentProps} />;
+            return <div {...contentProps} style={energySavingStyle} />;
         }
         return (
-            <div {...contentProps} style={hideContentStyle}>
+            <div {...contentProps} style={energySavingHideStyle}>
                 {pane}
             </div>
         );
@@ -331,7 +322,7 @@ const TabPane = forwardRef((props: TabPaneProps, ref: Ref<TabPaneRef>) => {
             className={cls(
                 `${prefix}-container`,
                 tabDirection,
-                `mode-${mode}`,
+                swipeEnergySaving ? `mode-${mode}-energy-saving` : `mode-${mode}`,
                 tabPaneClass,
                 { 'full-screen': fullScreen },
                 {

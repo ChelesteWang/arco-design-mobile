@@ -9,8 +9,9 @@ import React, {
     useEffect,
     useMemo,
     CSSProperties,
+    useContext,
 } from 'react';
-import { ContextLayout } from '../context-provider';
+import { ContextLayout, GlobalContext } from '../context-provider';
 import IconClose from '../icon/IconClose';
 
 export interface NoticeBarProps {
@@ -114,7 +115,7 @@ export interface NoticeBarRef {
 /**
  * 可自定义换行或滚动效果，支持循环滚动。
  * @en Line wrapping or scrolling effects can be customized, and circular scrolling is supported.
- * @type 数据展示
+ * @type 信息展示
  * @type_en Data Display
  * @name 通知栏
  * @name_en NoticeBar
@@ -136,6 +137,7 @@ const NoticeBar = forwardRef((props: NoticeBarProps, ref: Ref<NoticeBarRef>) => 
         onClick,
         onClose,
     } = props;
+    const { useRtl } = useContext(GlobalContext);
     const domRef = useRef<HTMLDivElement>(null);
     const wrapRef = useRef<HTMLDivElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
@@ -180,7 +182,7 @@ const NoticeBar = forwardRef((props: NoticeBarProps, ref: Ref<NoticeBarRef>) => 
 
     useEffect(() => {
         updateData();
-    }, []);
+    }, [useRtl]);
 
     function close() {
         if (domRef.current) {
@@ -233,7 +235,8 @@ const NoticeBar = forwardRef((props: NoticeBarProps, ref: Ref<NoticeBarRef>) => 
                 setNeedMarquee(false);
                 contentDom.style.animationDuration = `${wrapWidth / speed + duration}s`;
                 contentDom.style.animationIterationCount = 'infinite';
-                contentDom.style.paddingLeft = `${wrapWidth}px`;
+                const paddingAttr = useRtl ? 'paddingRight' : 'paddingLeft';
+                contentDom.style[paddingAttr] = `${wrapWidth}px`;
                 nextTick(() => {
                     setNeedMarquee(true);
                 });

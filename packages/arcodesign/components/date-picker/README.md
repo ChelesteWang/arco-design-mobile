@@ -1,4 +1,4 @@
-### 数据输入
+### 数据录入
 
 # 日期时间选择器 DatePicker
 
@@ -79,13 +79,13 @@
 > mode
 
 ```
-"date"|"time"|"datetime"
+"date" | "time" | "datetime"
 ```
 
 > ItemType
 
 ```
-"date"|"year"|"month"|"hour"|"minute"|"second"
+"date" | "year" | "month" | "hour" | "minute" | "second"
 ```
 
 > PickerData

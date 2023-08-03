@@ -4,7 +4,7 @@
         "en": "Display the progress of a task, or guide users to complete a complex task.",
         "name": "步骤条",
         "name_en": "Steps",
-        "type": "数据展示",
+        "type": "信息展示",
         "type_en": "Data Display"
     },
     "displayName": "Steps",
@@ -70,6 +70,36 @@
                     },
                     {
                         "value": "\"horizontal\""
+                    }
+                ]
+            }
+        },
+        "align": {
+            "defaultValue": {
+                "value": "direction=\"horizontal\" 时默认为 \"center\"，direction=\"vertical\" 时默认为 \"start\""
+            },
+            "description": "步骤条对齐方式\n@en Step alignment\n@default_en \"center\" when direction=\"horizontal\" and \"start\" when direction=\"vertical\"",
+            "name": "align",
+            "tags": {
+                "en": "Step alignment",
+                "default": "direction=\"horizontal\" 时默认为 \"center\"，direction=\"vertical\" 时默认为 \"start\"",
+                "default_en": "\"center\" when direction=\"horizontal\" and \"start\" when direction=\"vertical\""
+            },
+            "descWithTags": "步骤条对齐方式",
+            "parent": {
+                "fileName": "arcom-github/packages/arcodesign/components/steps/type.ts",
+                "name": "StepsProps"
+            },
+            "required": false,
+            "type": {
+                "name": "enum",
+                "raw": "\"center\" | \"start\"",
+                "value": [
+                    {
+                        "value": "\"center\""
+                    },
+                    {
+                        "value": "\"start\""
                     }
                 ]
             }
@@ -327,6 +357,28 @@
                     "en": "Specify the step status. When this item is not input, the status will be automatically specified according to the current property of steps"
                 },
                 "descWithTags": "指定步骤状态，不配置该项时，会根据 Steps 的 current 属性自动指定状态"
+            },
+            "align": {
+                "name": "align",
+                "required": false,
+                "description": "指定对齐方式，不配置该项时，会跟随 Steps 的 align 属性值\n@en Specify the step alignment. When this item is not input, it will be automatically specified according to the align property of steps",
+                "defaultValue": null,
+                "type": {
+                    "name": "enum",
+                    "raw": "\"center\" | \"start\"",
+                    "value": [
+                        {
+                            "value": "\"center\""
+                        },
+                        {
+                            "value": "\"start\""
+                        }
+                    ]
+                },
+                "tags": {
+                    "en": "Specify the step alignment. When this item is not input, it will be automatically specified according to the align property of steps"
+                },
+                "descWithTags": "指定对齐方式，不配置该项时，会跟随 Steps 的 align 属性值"
             }
         },
         "StepsRef": {
@@ -434,6 +486,32 @@
                             },
                             {
                                 "value": "\"process\""
+                            }
+                        ]
+                    }
+                },
+                "align": {
+                    "defaultValue": null,
+                    "description": "指定对齐方式，不配置该项时，会跟随 Steps 的 align 属性值\n@en Specify the step alignment. When this item is not input, it will be automatically specified according to the align property of steps",
+                    "name": "align",
+                    "tags": {
+                        "en": "Specify the step alignment. When this item is not input, it will be automatically specified according to the align property of steps"
+                    },
+                    "descWithTags": "指定对齐方式，不配置该项时，会跟随 Steps 的 align 属性值",
+                    "parent": {
+                        "fileName": "arcom-github/packages/arcodesign/components/steps/type.ts",
+                        "name": "StepProps"
+                    },
+                    "required": false,
+                    "type": {
+                        "name": "enum",
+                        "raw": "\"center\" | \"start\"",
+                        "value": [
+                            {
+                                "value": "\"center\""
+                            },
+                            {
+                                "value": "\"start\""
                             }
                         ]
                     }

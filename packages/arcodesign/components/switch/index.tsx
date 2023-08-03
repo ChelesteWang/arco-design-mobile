@@ -1,6 +1,14 @@
-import React, { useState, useEffect, forwardRef, Ref, useImperativeHandle, useRef } from 'react';
-import { cls } from '@arco-design/mobile-utils';
-import { ContextLayout } from '../context-provider';
+import React, {
+    useState,
+    useEffect,
+    forwardRef,
+    Ref,
+    useImperativeHandle,
+    useRef,
+    useContext,
+} from 'react';
+import { cls, componentWrapper } from '@arco-design/mobile-utils';
+import { ContextLayout, GlobalContext } from '../context-provider';
 import { useSystem } from '../_helpers';
 
 interface SwitchText {
@@ -97,15 +105,8 @@ export interface SwitchRef {
     dom: HTMLDivElement | null;
 }
 
-/**
- * 开关组件，支持点击和滑动触发开关动作。
- * @en A switch component that supports click and slide trigger switch actions.
- * @type 数据输入
- * @type_en Data Entry
- * @name 开关
- * @name_en Switch
- */
 const Switch = forwardRef((props: SwitchProps, ref: Ref<SwitchRef>) => {
+    const { useRtl } = useContext(GlobalContext);
     const system = useSystem();
     const {
         className,
@@ -161,15 +162,17 @@ const Switch = forwardRef((props: SwitchProps, ref: Ref<SwitchRef>) => {
         }
         const touchEndX = e.changedTouches && e.changedTouches[0] ? e.changedTouches[0].clientX : 0;
         const distance = touchEndX - touchStartX;
+        const swipeRight = useRtl ? distance < 0 : distance > 0;
+        const swipeLeft = useRtl ? distance > 0 : distance < 0;
 
         let newChecked = false;
         // 右滑打开
         // @en Swipe right to open
-        if (distance > 0) {
+        if (swipeRight) {
             newChecked = true;
             // 左滑关闭
             // @en Swipe left to close
-        } else if (distance < 0) {
+        } else if (swipeLeft) {
             newChecked = false;
             // 点击时取反
             // @en Invert on clicking
@@ -189,6 +192,10 @@ const Switch = forwardRef((props: SwitchProps, ref: Ref<SwitchRef>) => {
         <ContextLayout>
             {({ prefixCls }) => (
                 <div
+                    role="switch"
+                    aria-checked={switchChecked}
+                    aria-disabled={disabled}
+                    tabIndex={0}
                     ref={domRef}
                     className={cls(
                         `${prefixCls}-switch all-border-box`,
@@ -211,13 +218,20 @@ const Switch = forwardRef((props: SwitchProps, ref: Ref<SwitchRef>) => {
                             {switchChecked ? text.off || '' : text.on || ''}
                         </span>
                     ) : null}
-                    <div className={`${prefixCls}-switch-inner`}>
-                        {innerArea ? innerArea : null}
-                    </div>
+                    <div className={`${prefixCls}-switch-inner`}>{innerArea || null}</div>
                 </div>
             )}
         </ContextLayout>
     );
 });
 
-export default Switch;
+/**
+ * 开关组件，支持点击和滑动触发开关动作。
+ * @en A switch component that supports click and slide trigger switch actions.
+ * @type 数据录入
+ * @type_en Data Entry
+ * @name 开关
+ * @name_en Switch
+ * @displayName Switch
+ */
+export default componentWrapper(Switch, 'Switch');

@@ -15,6 +15,7 @@ import {
 } from '@arco-design/mobile-utils';
 import { ContextLayout } from '../context-provider';
 import BackArrow from './back-icon';
+import { useSystem } from '../_helpers';
 
 export interface NavBarRef {
     /** @deprecated */
@@ -123,6 +124,23 @@ export interface NavBarProps {
      * @en Set a custom style according to the scroll offset value. After setting this property, the scroll event of the scroll container will be monitored.
      */
     getComputedStyleByScroll?: (offset: number) => CSSProperties;
+    /**
+     * 滚动时回调，设置该属性后将监听滚动容器的滚动事件
+     * @en Callback when scrolling. After setting this property, the scroll event of the scroll container will be monitored.
+     */
+    onScrollChange?: (offset: number) => void;
+    /**
+     * 无障碍aria-label属性
+     * @en Accessibility attribute aria-label
+     * @default ""
+     */
+    ariaLabel?: string;
+    /**
+     * 无障碍role属性
+     * @en Accessibility attribute role
+     * @default "banner"
+     */
+    ariaRole?: string;
 }
 
 /**
@@ -152,15 +170,21 @@ const NavBar = forwardRef((props: NavBarProps, ref: Ref<NavBarRef>) => {
         extra,
         getScrollContainer,
         showOffset = 0,
+        onScrollChange,
         getComputedStyleByScroll,
+        ariaLabel = '',
+        ariaRole = 'banner',
     } = props;
     const navBarRef = useRef<HTMLDivElement | null>(null);
 
     const [scrollToggleHide, setScrollToggleHide] = useState(showOffset > 0);
     const relBackground = scrollToggleHide ? 'transparent' : '';
     const [customStyle, setCustomStyle] = useState<CSSProperties>({});
+    const system = useSystem();
+
     const onElementScroll = (curOffset: number) => {
-        setScrollToggleHide(curOffset <= showOffset);
+        setScrollToggleHide(curOffset < showOffset);
+        onScrollChange?.(curOffset);
 
         if (getComputedStyleByScroll) {
             const cstyle = getComputedStyleByScroll(curOffset);
@@ -184,8 +208,9 @@ const NavBar = forwardRef((props: NavBarProps, ref: Ref<NavBarRef>) => {
     };
 
     useEffect(() => {
-        const needBind = showOffset || getComputedStyleByScroll;
+        const needBind = showOffset || getComputedStyleByScroll || onScrollChange;
         const container = getValidScrollContainer(getScrollContainer);
+        handleEleScroll();
         if (needBind && container) {
             container.addEventListener('scroll', handleEleScroll, false);
         }
@@ -194,7 +219,7 @@ const NavBar = forwardRef((props: NavBarProps, ref: Ref<NavBarRef>) => {
                 container.removeEventListener('scroll', handleEleScroll, false);
             }
         };
-    }, [showOffset, getComputedStyleByScroll, getScrollContainer]);
+    }, [showOffset, getComputedStyleByScroll, onScrollChange, getScrollContainer]);
 
     function handleClickLeft(e: React.MouseEvent) {
         if (onClickLeft) {
@@ -229,18 +254,20 @@ const NavBar = forwardRef((props: NavBarProps, ref: Ref<NavBarRef>) => {
                         [`${prefixCls}-nav-bar-hide`]: scrollToggleHide,
                     })}
                     style={{
-                        paddingTop: fixed && statusBarHeight ? `${statusBarHeight}px` : '',
+                        paddingTop: fixed && statusBarHeight ? `${statusBarHeight}px` : '0px',
                         ...(style || {}),
                         ...(relBackground ? { background: relBackground } : {}),
                     }}
+                    aria-label={ariaLabel}
+                    role={ariaRole}
                 >
                     <div
-                        className={cls(className, `${prefixCls}-nav-bar-wrapper`, {
+                        className={cls(className, system, `${prefixCls}-nav-bar-wrapper`, {
                             [`${prefixCls}-nav-bar-wrapper-fixed`]: fixed,
                             [`${prefixCls}-nav-bar-wrapper-border`]: hasBottomLine,
                         })}
                         style={{
-                            paddingTop: statusBarHeight ? `${statusBarHeight}px` : '',
+                            paddingTop: statusBarHeight ? `${statusBarHeight}px` : '0px',
                             ...customStyle,
                         }}
                     >

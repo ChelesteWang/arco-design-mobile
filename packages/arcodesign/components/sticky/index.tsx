@@ -31,6 +31,11 @@ export interface StickyRef {
      * @en In the local scrolling mode, if there is nested scrolling outside the container, this method can be actively called to make the sticky element actively update the fixed position
      */
     recalculatePosition: () => void;
+    /**
+     * 手动更新占位模块的高度
+     * @en Manually update the height of the placeholder
+     */
+    updatePlaceholderLayout: () => void;
 }
 
 export interface StickyEventPayload {
@@ -141,7 +146,7 @@ export interface StickyProps {
      */
     getContainer?: () => HTMLElement | string;
     /**
-     * 指定滚动容器，如果指定该值则relative属性始终认定为false；如果返回string则使用querySelector选取容器
+     * 指定滚动容器；如果返回string则使用querySelector选取容器
      * @en Specifies the scrolling container. If this value is specified, the relative property is always regarded as false; if a string is input, use querySelector to select the container
      * @default () => window
      */
@@ -204,8 +209,10 @@ const Sticky = forwardRef((props: StickyProps, ref: Ref<StickyRef>) => {
                 height: containerHeight,
             } = containerRect;
 
-            const disFromTop = placeholderClientRect.top - containerTop;
-            const disFromBottom = placeholderClientRect.top + calculatedHeight - containerBottom;
+            const disFromTop = Math.round(placeholderClientRect.top - containerTop);
+            const disFromBottom = Math.round(
+                placeholderClientRect.top + calculatedHeight - containerBottom,
+            );
             const topFollowDifference =
                 followBottom - followOffset - calculatedHeight - topOffset - containerTop;
             const bottomFollowDifference =
@@ -273,6 +280,7 @@ const Sticky = forwardRef((props: StickyProps, ref: Ref<StickyRef>) => {
             stickyStyle,
             onStickyStateChange,
             onTopChange,
+            userSetStickyCssStyle,
         ],
     );
 
@@ -296,6 +304,23 @@ const Sticky = forwardRef((props: StickyProps, ref: Ref<StickyRef>) => {
 
         framePendingRef.current = true;
     }, [containerEventHandler]);
+
+    const updatePlaceholderLayoutInner = useCallback(() => {
+        if (placeholderRef.current) {
+            const contentHeight = contentCalculateHeightRef.current;
+            // 当元素吸顶时，默认有一个占位的元素占住该元素的位置，避免布局产生抖动
+            // @en When an element is sticky to the top, a placeholder element occupies the element's position by default to avoid jitter in the layout
+            placeholderRef.current.style.height = `${isStickyRef.current ? contentHeight : 0}px`;
+        }
+    }, []);
+
+    const updatePlaceholderLayout = useCallback(() => {
+        if (contentRef.current) {
+            const contentClientRect = contentRef.current.getBoundingClientRect();
+            contentCalculateHeightRef.current = contentClientRect.height;
+        }
+        updatePlaceholderLayoutInner();
+    }, []);
 
     useEffect(() => {
         const containerEle = getActualContainer(getContainer) as HTMLElement;
@@ -323,13 +348,7 @@ const Sticky = forwardRef((props: StickyProps, ref: Ref<StickyRef>) => {
     }, [getContainer, getScrollContainer, recalculatePosition]);
 
     useEffect(() => {
-        if (placeholderRef.current) {
-            // 当元素吸顶时，默认有一个占位的元素占住该元素的位置，避免布局产生抖动
-            // @en When an element is sticky to the top, a placeholder element occupies the element's position by default to avoid jitter in the layout
-            placeholderRef.current.style.height = `${
-                isStickyRef.current ? contentCalculateHeightRef.current : 0
-            }px`;
-        }
+        updatePlaceholderLayoutInner();
     }, [isSticky, wasSticky]);
 
     useImperativeHandle(
@@ -337,8 +356,9 @@ const Sticky = forwardRef((props: StickyProps, ref: Ref<StickyRef>) => {
         () => ({
             dom: contentRef.current,
             recalculatePosition,
+            updatePlaceholderLayout,
         }),
-        [recalculatePosition],
+        [recalculatePosition, updatePlaceholderLayout],
     );
 
     const computedStyle = useMemo(

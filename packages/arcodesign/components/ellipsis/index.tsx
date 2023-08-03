@@ -13,7 +13,7 @@ export * from './type';
 /**
  * 文本缩略组件，支持多行缩略、富文本、自定义缩略符、尾字符过滤等。
  * @en Text ellipsis component supports multi-line abbreviations, rich text, custom abbreviations, tail character filtering, etc.
- * @type 数据展示
+ * @type 信息展示
  * @type_en Data Display
  * @name 文本缩略
  * @name_en Ellipsis
@@ -28,10 +28,11 @@ const Ellipsis = forwardRef((props: EllipsisProps, ref: Ref<EllipsisRef>) => {
         ellipsis = true,
         ellipsisNode = '...',
         collapseNode = '',
-        onCollapseNodeClick,
-        endExcludes = [],
+        endExcludes,
         reflowOnResize = false,
+        floatEllipsisNode = false,
         onReflow,
+        onCollapseNodeClick,
         onEllipsisNodeClick,
     } = props;
     const domRef = useRef<HTMLDivElement | null>(null);
@@ -40,10 +41,9 @@ const Ellipsis = forwardRef((props: EllipsisProps, ref: Ref<EllipsisRef>) => {
     const useNativeEllipsis =
         isSupportWebkitLineClamp() &&
         maxHeight === void 0 &&
-        ellipsisNode === '...' &&
-        endExcludes.length === 0 &&
+        (!endExcludes || endExcludes.length === 0) &&
         !onReflow &&
-        !onEllipsisNodeClick;
+        (floatEllipsisNode || (ellipsisNode === '...' && !onEllipsisNodeClick));
 
     useImperativeHandle(ref, () => ({
         dom: domRef.current,
@@ -61,7 +61,9 @@ const Ellipsis = forwardRef((props: EllipsisProps, ref: Ref<EllipsisRef>) => {
                             dangerouslyUseInnerHTML={dangerouslyUseInnerHTML}
                             text={text}
                             maxLine={maxLine}
+                            ellipsisNode={ellipsisNode}
                             collapseNode={collapseNode}
+                            onEllipsisNodeClick={onEllipsisNodeClick}
                             onCollapseNodeClick={onCollapseNodeClick}
                         />
                     ) : (

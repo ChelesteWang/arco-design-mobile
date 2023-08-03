@@ -2,7 +2,7 @@
     "description": "轮播组件，支持自定义轮播索引样式及滑块宽度。**需要注意的是，如果正使用`fastclick`，需要为 touchstart 的 target 添加`needsclick`类**（<a href=\"https://github.com/ftlabs/fastclick#ignore-certain-elements-with-needsclick\" target=\"_blank\">详情戳这里</a>），以规避`fastclick`逻辑与组件内部的手势冲突。（如果使用了`list`属性则无需额外添加）",
     "descriptionTags": {
         "en": "Carousel component, supports custom carousel index style and slider width. **Note that if you are using `fastclick`, you need to add a `needsclick` class to the touchstart target ** (<a href=\"https://github.com/ftlabs/fastclick#ignore-certain-elements- with-needsclick\" target=\"_blank\">click here for details</a>) to avoid `fastclick` logic conflicts with gestures inside the component. (no need to add if `list` is set)",
-        "type": "数据展示",
+        "type": "信息展示",
         "type_en": "Data Display",
         "name": "轮播图",
         "name_en": "Carousel"
@@ -173,6 +173,35 @@
             "required": false,
             "type": {
                 "name": "boolean"
+            }
+        },
+        "autoPlayDirection": {
+            "defaultValue": {
+                "value": "\"normal\""
+            },
+            "description": "自动播放方向\n@en Direction when playing auto",
+            "name": "autoPlayDirection",
+            "tags": {
+                "en": "Direction when playing auto",
+                "default": "\"normal\""
+            },
+            "descWithTags": "自动播放方向",
+            "parent": {
+                "fileName": "arcom-github/packages/arcodesign/components/carousel/index.tsx",
+                "name": "CarouselProps"
+            },
+            "required": false,
+            "type": {
+                "name": "enum",
+                "raw": "\"normal\" | \"reverse\"",
+                "value": [
+                    {
+                        "value": "\"normal\""
+                    },
+                    {
+                        "value": "\"reverse\""
+                    }
+                ]
             }
         },
         "swipeable": {
@@ -846,6 +875,26 @@
                 "name": "boolean"
             }
         },
+        "iOSVisibleOptimize": {
+            "defaultValue": {
+                "value": "true"
+            },
+            "description": "在iOS下是否需要在切屏时做DOM强刷优化，用于修复iOS息屏时自动播放的蜜汁渲染问题\n@en Whether to do DOM forced refresh optimization when the screen is off under iOS, to fix the rendering problem of automatic playback when the iOS screen is off",
+            "name": "iOSVisibleOptimize",
+            "tags": {
+                "en": "Whether to do DOM forced refresh optimization when the screen is off under iOS, to fix the rendering problem of automatic playback when the iOS screen is off",
+                "default": "true"
+            },
+            "descWithTags": "在iOS下是否需要在切屏时做DOM强刷优化，用于修复iOS息屏时自动播放的蜜汁渲染问题",
+            "parent": {
+                "fileName": "arcom-github/packages/arcodesign/components/carousel/index.tsx",
+                "name": "CarouselProps"
+            },
+            "required": false,
+            "type": {
+                "name": "boolean"
+            }
+        },
         "distanceProcessor": {
             "defaultValue": {
                 "value": "(posDis, wrapSize, childSize) => childSize * (posDis / wrapSize)"
@@ -1183,7 +1232,7 @@
                 "description": "手动更新当前选中索引，rightNow 表示是否立刻跳转到目标索引，否则执行过渡动画到目标索引\n@en Manually update the currently selected index, rightNow indicates whether to jump to the target index immediately, otherwise perform a transition animation to the target index",
                 "defaultValue": null,
                 "type": {
-                    "name": "(newIndex: number, rightNow?: boolean) => void"
+                    "name": "(newIndex: number, rightNow?: boolean, direction?: \"left\" | \"right\") => void"
                 },
                 "tags": {
                     "en": "Manually update the currently selected index, rightNow indicates whether to jump to the target index immediately, otherwise perform a transition animation to the target index"

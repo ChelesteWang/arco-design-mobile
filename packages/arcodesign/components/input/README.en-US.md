@@ -15,6 +15,7 @@ The input box, supports adding prefixes and suffixes.
 |inputClass|Custom classname for input DOM|string|-|
 |inputStyle|Custom style for input DOM|CSSProperties|-|
 |nativeProps|Other unlisted native properties have lower priority than listed component properties|InputHTMLAttributes\<HTMLInputElement\>|-|
+|ariaLabel|accessible label|string|-|
 |id|Input id|string|-|
 |name|Input name|string|-|
 |className|Custom classname|string|-|
@@ -27,14 +28,16 @@ The input box, supports adding prefixes and suffixes.
 |disabled|Whether the input box is disabled|boolean|-|
 |readOnly|Read\-only|boolean|-|
 |autoFocus|Whether to automatically get the focus|boolean|-|
+|blockChangeWhenCompositing|When inputting Chinese on ios, onChange is not triggered during pinyin input, but only after confirming the selection|boolean|false|
 |label|text to the left of the input box|ReactNode|-|
 |required|Whether it is required|boolean|-|
 |validator|Regular validation, input is not allowed if it does not meet the validation|RegExp \| ((value: string) =\> boolean)|-|
-|prepend|The content of the header of the input box, outside the input box|ReactNode|-|
-|append|The content at the end of the input box, outside the input box|ReactNode|-|
+|prepend|The content of the header of the input box, outside the input box|ReactNode \| ((focusing: boolean, inputValue: string) =\> ReactNode)|-|
+|append|The content at the end of the input box, outside the input box|ReactNode \| ((focusing: boolean, inputValue: string) =\> ReactNode)|-|
 |blurBeforeFocus|Blur before focusing, that is, the keyboard will be re\-bounced when switching between different inputs\. It is often used to reload the keyboard when the input type is switched\. It is valid on Android\.|boolean|-|
 |clearable|whether there is a clear button|boolean|-|
 |clearShowType|Clear button display timing: focus \- display when focused, value \- display when there is value, always \- always display|"focus" \| "value" \| "always"|"focus"|
+|preventEventWhenClearing|Whether to block the onBlur and onFocus events generated when the clear button is clicked in focus mode|boolean|true|
 |clearIcon|Clear button type, also customizable|ReactNode|\<IconClear className="clear-icon" /\>|
 |onClear|Callback when clear button is pressed|(e: MouseEvent\<HTMLElement, MouseEvent\>) =\> void|-|
 |prefix|The prefix of the input box, inside the input box, can also be customized|ReactNode|-|

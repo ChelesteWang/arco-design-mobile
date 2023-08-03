@@ -1,4 +1,4 @@
-### 数据展示
+### 信息展示
 
 # 气泡卡片 Popover
 
@@ -115,7 +115,7 @@
 > Direction
 
 ```
-"topLeft"|"topCenter"|"topRight"|"bottomLeft"|"bottomCenter"|"bottomRight"
+"topLeft" | "topCenter" | "topRight" | "bottomLeft" | "bottomCenter" | "bottomRight"
 ```
 
 > EdgeOffset

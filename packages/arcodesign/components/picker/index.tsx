@@ -1,14 +1,9 @@
 import React, { useEffect, useState, useRef, forwardRef, Ref, useImperativeHandle } from 'react';
-import { cls, nextTick } from '@arco-design/mobile-utils';
+import { cls, componentWrapper, nextTick } from '@arco-design/mobile-utils';
 import { ContextLayout } from '../context-provider';
 import Popup from '../popup';
-import PickerView, {
-    PickerViewRef,
-    ValueType,
-    PickerData,
-    PickerCellMovingStatus,
-} from '../picker-view';
-import { PickerProps, DataType } from './type';
+import PickerView, { PickerViewRef, ValueType, PickerCellMovingStatus } from '../picker-view';
+import { PickerProps } from './type';
 import { useListenResize } from '../_helpers';
 
 export * from './type';
@@ -47,49 +42,6 @@ export interface PickerRef {
     scrollToCurrentIndex: () => void;
 }
 
-const getInitialValue = (value, data: DataType, cascade) => {
-    if (value && value.length) {
-        return value;
-    }
-
-    const computedValue: ValueType[] = [];
-
-    if (!cascade) {
-        if (!(data[0] instanceof Array)) {
-            return data[0]?.value ? [data[0].value] : [];
-        }
-
-        (data as (ValueType | PickerData)[][]).map(column => {
-            computedValue.push(typeof column[0] === 'object' ? column[0].value : column[0]);
-        });
-    } else {
-        const cascadePickerData = data as unknown as PickerData[];
-        if (!cascadePickerData || !cascadePickerData.length) {
-            return computedValue;
-        }
-
-        computedValue.push(cascadePickerData[0].value);
-
-        let traverse = cascadePickerData[0].children;
-
-        while (traverse) {
-            computedValue.push(traverse[0].value);
-
-            traverse = traverse[0].children;
-        }
-    }
-
-    return computedValue;
-};
-
-/**
- * 选择器组件，形式是弹起的浮层。
- * @en The selector component, in the form of a popup layer.
- * @type 数据输入
- * @type_en Data Entry
- * @name 选择器
- * @name_en Picker
- */
 const Picker = forwardRef((props: PickerProps, ref: Ref<PickerRef>) => {
     const {
         className,
@@ -118,7 +70,7 @@ const Picker = forwardRef((props: PickerProps, ref: Ref<PickerRef>) => {
         ...otherProps
     } = props;
 
-    const [scrollValue, setScrollValue] = useState(getInitialValue(value, data, cascade));
+    const [scrollValue, setScrollValue] = useState(value);
     const domRef = useRef<HTMLDivElement | null>(null);
     const pickerViewRef = useRef<PickerViewRef>(null);
 
@@ -143,7 +95,7 @@ const Picker = forwardRef((props: PickerProps, ref: Ref<PickerRef>) => {
     const handleConfirm = () => {
         pickerViewRef.current?.scrollToCurrentIndex();
         nextTick(() => {
-            const val = pickerViewRef.current?.getAllColumnValues() || scrollValue;
+            const val = pickerViewRef.current?.getAllColumnValues() || scrollValue || [];
             if (onOk) {
                 onOk(val);
             }
@@ -209,7 +161,7 @@ const Picker = forwardRef((props: PickerProps, ref: Ref<PickerRef>) => {
                             cols={cols}
                             rows={rows}
                             disabled={disabled}
-                            value={getInitialValue(value, data, cascade)}
+                            value={value}
                             onPickerChange={onPickerChange}
                             itemStyle={itemStyle}
                             clickable={clickable}
@@ -223,4 +175,13 @@ const Picker = forwardRef((props: PickerProps, ref: Ref<PickerRef>) => {
     );
 });
 
-export default Picker;
+/**
+ * 选择器组件，形式是弹起的浮层。
+ * @en The selector component, in the form of a popup layer.
+ * @type 数据录入
+ * @type_en Data Entry
+ * @name 选择器
+ * @name_en Picker
+ * @displayName Picker
+ */
+export default componentWrapper(Picker, 'Picker');

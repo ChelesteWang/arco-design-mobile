@@ -1,6 +1,6 @@
 import React, { useEffect, forwardRef, Ref, useRef, useImperativeHandle, ReactNode } from 'react';
 import { cls, componentWrapper } from '@arco-design/mobile-utils';
-import { ContextLayout } from '../context-provider';
+import { ContextLayout, CompWithGlobalContext } from '../context-provider';
 import Transition from '../transition';
 import IconErrorCircle from '../icon/IconErrorCircle';
 import IconWarnCircle from '../icon/IconWarnCircle';
@@ -147,6 +147,7 @@ const Toast = forwardRef((props: ToastProps, ref: Ref<ToastRef>) => {
     } = props;
     const closeTimerRef = useRef<number>();
     const domRef = useRef<HTMLDivElement | null>(null);
+    const wrapDomRef = useRef<HTMLDivElement | null>(null);
     const isInitialMount = useRef(false);
     const hasType = type && type !== 'info';
 
@@ -214,6 +215,7 @@ const Toast = forwardRef((props: ToastProps, ref: Ref<ToastRef>) => {
                     'no-event': !disableBodyTouch,
                 })}
                 onClick={handleClickMask}
+                ref={wrapDomRef}
             >
                 <div
                     className={cls(`${prefixClass}-inner`, layout, {
@@ -258,7 +260,12 @@ const Toast = forwardRef((props: ToastProps, ref: Ref<ToastRef>) => {
                         className={cls(`${prefixCls}-toast`, 'all-border-box', className)}
                         ref={domRef}
                     >
-                        <Transition in={visible} timeout={transitionDuration} type="fade">
+                        <Transition
+                            in={visible}
+                            timeout={transitionDuration}
+                            type="fade"
+                            nodeRef={wrapDomRef}
+                        >
                             {renderComponent(`${prefixCls}-toast`)}
                         </Transition>
                     </div>
@@ -315,6 +322,8 @@ export function methodsGenerator<P extends ToastBaseProps>(Comp: React.FunctionC
     };
 }
 
+const ToastWithGlobalContext = CompWithGlobalContext(Toast);
+
 /**
  * 轻提示组件，支持各个场景下调用方法。
  * @en The toast component, supports calling methods in various scenarios.
@@ -323,4 +332,4 @@ export function methodsGenerator<P extends ToastBaseProps>(Comp: React.FunctionC
  * @name 轻提示
  * @name_en Toast
  */
-export default componentWrapper(Toast, methodsGenerator(Toast));
+export default componentWrapper(Toast, methodsGenerator(ToastWithGlobalContext));

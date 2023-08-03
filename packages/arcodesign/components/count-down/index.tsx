@@ -3,6 +3,7 @@ import { unParseTime, parseFormat } from './util';
 import { useCountDown } from './hooks';
 import { ContextLayout } from '../context-provider';
 import { CountDownProps, CountDownRef } from './type';
+
 export * from './type';
 
 /**
@@ -10,7 +11,7 @@ export * from './type';
  * @en Countdown Component
  * @name 倒计时
  * @name_en CountDown
- * @type 数据展示
+ * @type 信息展示
  * @type_en Data Display
  */
 const CountDown = forwardRef((props: CountDownProps, ref: Ref<CountDownRef>) => {

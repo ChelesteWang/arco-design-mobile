@@ -8,7 +8,7 @@ import React, {
     CSSProperties,
     useMemo,
 } from 'react';
-import { cls, handleUnit, nextTick } from '@arco-design/mobile-utils';
+import { cls, defaultLocale, nextTick } from '@arco-design/mobile-utils';
 import { ContextLayout } from '../context-provider';
 import Loading from '../loading';
 import { useSystem, useWindowSize, getStyleWithVendor, useMountedState } from '../_helpers';
@@ -29,7 +29,6 @@ export interface ImageProps {
     /**
      * 指定图片状态，staticLabel=false时有效
      * @en The specified image state, valid when staticLabel=false
-     * @default "init"
      */
     status?: ImageStatus;
     /**
@@ -198,7 +197,7 @@ export interface ImageRef {
 /**
  * 增强版的 img 标签，提供多种图片填充模式，支持图片加载中提示、加载失败提示。
  * @en Enhanced img tag, provides a variety of image filling modes, and supports image loading prompts and loading failure prompts.
- * @type 数据展示
+ * @type 信息展示
  * @type_en Data Display
  * @name 图片
  * @name_en Image
@@ -214,10 +213,11 @@ export const BaseImage = forwardRef((props: ImageProps, ref: Ref<ImageRef>) => {
     const wrapRef = useRef<HTMLDivElement | null>(null);
     const retryCountRef = useRef(0);
     const loadingImageRef = useRef<HTMLImageElement | null>(null);
+    const hasLoadedRef = useRef(false);
     const {
         style,
         className,
-        status = 'init',
+        status,
         src,
         width,
         height,
@@ -249,12 +249,10 @@ export const BaseImage = forwardRef((props: ImageProps, ref: Ref<ImageRef>) => {
     const isPreview = Boolean(fit.indexOf('preview') >= 0);
     const actualBoxWidth = boxWidth || windowWidth;
     const actualBoxHeight = boxHeight || windowHeight;
+    const validStatus = status === undefined ? imageStatus : status;
 
     const attrs = useMemo(() => {
         const imageStyle: CSSProperties = {};
-        if (radius) {
-            imageStyle.borderRadius = handleUnit(radius);
-        }
         if (!isPreview) {
             imageStyle.objectFit = fit as CSSProperties['objectFit'];
             imageStyle.objectPosition = position;
@@ -321,6 +319,7 @@ export const BaseImage = forwardRef((props: ImageProps, ref: Ref<ImageRef>) => {
         image.onload = evt => {
             loadingImageRef.current = null;
             imageDomRef.current = image;
+            hasLoadedRef.current = true;
             changeStatus('loaded');
             const { width: imageWidth = 0, height: imageHeight = 0 } = image;
             let extraClass = '';
@@ -410,7 +409,7 @@ export const BaseImage = forwardRef((props: ImageProps, ref: Ref<ImageRef>) => {
 
     return (
         <ContextLayout>
-            {({ prefixCls }) => (
+            {({ prefixCls, locale = defaultLocale }) => (
                 <div
                     className={cls(
                         `${prefixCls}-image all-border-box`,
@@ -431,11 +430,13 @@ export const BaseImage = forwardRef((props: ImageProps, ref: Ref<ImageRef>) => {
                         </div>
                     ) : null}
                     <div
-                        className={cls('image-container', imageStatus, {
+                        className={cls('image-container', validStatus, {
                             animate: Boolean(animateDuration),
                             'static-label': staticLabel,
+                            'has-loaded': hasLoadedRef.current,
                         })}
                         style={getStyleWithVendor({
+                            borderRadius: radius,
                             transitionDuration: `${animateDuration}ms`,
                         })}
                         onClick={onClick}
@@ -451,7 +452,7 @@ export const BaseImage = forwardRef((props: ImageProps, ref: Ref<ImageRef>) => {
                             />
                         ) : null}
                     </div>
-                    {showLoading && (status === 'loading' || imageStatus === 'loading') ? (
+                    {showLoading && validStatus === 'loading' ? (
                         <div
                             className="image-content image-loading-container"
                             style={{ borderRadius: radius }}
@@ -468,7 +469,7 @@ export const BaseImage = forwardRef((props: ImageProps, ref: Ref<ImageRef>) => {
                             )}
                         </div>
                     ) : null}
-                    {showError && (status === 'error' || imageStatus === 'error') ? (
+                    {showError && validStatus === 'error' ? (
                         <div
                             className="image-content image-error-container"
                             onClick={e => {
@@ -477,7 +478,9 @@ export const BaseImage = forwardRef((props: ImageProps, ref: Ref<ImageRef>) => {
                             }}
                             style={{ borderRadius: radius }}
                         >
-                            {errorArea || <div className="image-retry-load">重试</div>}
+                            {errorArea || (
+                                <div className="image-retry-load">{locale.Image.loadError}</div>
+                            )}
                         </div>
                     ) : null}
                     {topOverlap ? (

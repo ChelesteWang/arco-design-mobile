@@ -1,4 +1,4 @@
-### 数据输入
+### 数据录入
 
 # 单选框 Radio
 
@@ -52,7 +52,7 @@
 > ValueType
 
 ```
-string|number
+string | number
 ```
 
 > IconType

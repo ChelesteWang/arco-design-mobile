@@ -2,7 +2,7 @@
     "description": "增强版的 img 标签，提供多种图片填充模式，支持图片加载中提示、加载失败提示。",
     "descriptionTags": {
         "en": "Enhanced img tag, provides a variety of image filling modes, and supports image loading prompts and loading failure prompts.",
-        "type": "数据展示",
+        "type": "信息展示",
         "type_en": "Data Display",
         "name": "图片",
         "name_en": "Image"
@@ -45,14 +45,11 @@
             }
         },
         "status": {
-            "defaultValue": {
-                "value": "\"init\""
-            },
+            "defaultValue": null,
             "description": "指定图片状态，staticLabel=false时有效\n@en The specified image state, valid when staticLabel=false",
             "name": "status",
             "tags": {
-                "en": "The specified image state, valid when staticLabel=false",
-                "default": "\"init\""
+                "en": "The specified image state, valid when staticLabel=false"
             },
             "descWithTags": "指定图片状态，staticLabel=false时有效",
             "parent": {
@@ -613,8 +610,8 @@
         }
     },
     "deps": {
-        "ImageStatus": "\"loading\"|\"loaded\"|\"init\"|\"error\"",
-        "ObjectPosition": "string|number|string & {}",
+        "ImageStatus": "\"loading\" | \"loaded\" | \"init\" | \"error\"",
+        "ObjectPosition": "string | number | string & {}",
         "ImageRef": {
             "dom": {
                 "name": "dom",

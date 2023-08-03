@@ -4,7 +4,7 @@
  * @name_en General Hooks
  */
 import React, { useState, useRef, useEffect, useCallback, useContext } from 'react';
-import { getSystem, scrollWithAnimation } from '@arco-design/mobile-utils';
+import { getSystem, scrollWithAnimation, safeGetComputedStyle } from '@arco-design/mobile-utils';
 import { GlobalContext } from '../context-provider';
 import { BezierType } from '../progress';
 
@@ -47,6 +47,18 @@ export function useMountedState<S>(initialState: S | (() => S)) {
     );
     const result: [S, typeof setState] = [state, setValidState];
     return result;
+}
+
+export function useSameRefState<T>(
+    initialValue: T,
+): [T, React.MutableRefObject<T>, (data: T) => void] {
+    const [state, setState] = useState<T>(initialValue);
+    const stateRef = useRef<T>(state);
+    const setStateProxy = (data: T) => {
+        stateRef.current = data;
+        setState(data);
+    };
+    return [state, stateRef, setStateProxy];
 }
 
 export function useRefState<T>(
@@ -163,7 +175,7 @@ export function usePopupScroll(
                 scrollRef.current = actualEle.reduce(
                     (acc, nowEle) => [
                         ...acc,
-                        ...(nowEle && window.getComputedStyle(nowEle).overflow !== 'hidden'
+                        ...(nowEle && safeGetComputedStyle(nowEle).overflow !== 'hidden'
                             ? [
                                   {
                                       ele: nowEle,
@@ -429,13 +441,15 @@ export const useProgress = (
     const [currentPercentage, setCurrentPercentage] = useState(0);
     const [transitionControl, setTransitionControl] = useState(false);
     const [count, setCount] = useState(0);
+    const latestPercentage = useRef(percentage);
     useEffect(() => {
         mountedTransition
             ? scrollWithAnimation(
                   0,
                   percentage,
                   progress => {
-                      setCurrentPercentage(Math.floor(progress));
+                      const targetProgress = (progress / percentage) * latestPercentage.current;
+                      setCurrentPercentage(Math.floor(targetProgress));
                   },
                   duration,
                   mountedBezier,
@@ -448,6 +462,7 @@ export const useProgress = (
     }, []);
 
     useEffect(() => {
+        latestPercentage.current = percentage;
         setCount(Math.floor(percentage / step));
     }, [percentage, step]);
 

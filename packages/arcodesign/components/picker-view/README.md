@@ -1,4 +1,4 @@
-### 数据输入
+### 数据录入
 
 # 选择器视图 PickerView
 
@@ -46,11 +46,11 @@
 > ValueType
 
 ```
-string|number
+string | number
 ```
 
 > PickerCellMovingStatus
 
 ```
-"normal"|"moving"|"scrolling"
+"normal" | "moving" | "scrolling"
 ```

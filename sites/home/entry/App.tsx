@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { LanguageSupport } from '../../utils/language';
 import { FIGMA_RESOURCE, getUrlsByLanguage } from '../../utils/url';
 import Img from './components/img';
@@ -11,6 +11,7 @@ import Business from './business';
 import Nav from './nav';
 import Principle from './principle';
 import getUrlParam from '../../utils/getUrlParam';
+import { showGA } from '../../utils/ga';
 import { GlobalContext, isMobileBrowser } from './setting';
 import { localeMap } from '../../utils/locale';
 import './index.less';
@@ -43,14 +44,6 @@ export default function App() {
                     {localeMap.DesignResourceDesc[language]}
                 </div>
                 <div className="resources-group">
-                    {/* <div className="resource-item">
-                        <Img name="sketch.png" className="resource-logo" />
-                        <div className="resource-text">
-                            <div className="title">下载 Sketch 文件 <Download  className="resource-icon" /></div>
-                            <div className="desc">将下载至电脑本地进行编辑。</div>
-                        </div>
-
-                    </div> */}
                     <div className="resource-item" onClick={() => window.open(FIGMA_RESOURCE)}>
                         <Img name="figma.png" className="resource-logo" />
                         <div className="resource-text">
@@ -72,6 +65,10 @@ export default function App() {
     }
 
     const isMobile = useMemo(() => isMobileBrowser(), []);
+
+    useEffect(() => {
+        showGA();
+    }, []);
 
     return (
         <GlobalContext.Provider value={{ language, isMobile }}>

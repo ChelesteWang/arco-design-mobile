@@ -310,19 +310,15 @@
 
         &:not(.custom) {
 
-            &.line {
-                .use-var(margin-right, tabs-tab-bar-line-gutter);
-
-                &.last {
-                    margin-right: 0;
-                }
+            &.line:not(.last) {
+                .use-var-with-rtl(margin-right, tabs-tab-bar-line-gutter);
             }
 
             &.line,
             &.line-divide {
 
                 &.active {
-                    .text-medium-var(tabs-tab-bar-line-active-color);
+                    .text-medium();
                     .use-var(color, tabs-tab-bar-line-active-color);
                 }
             }
@@ -333,21 +329,21 @@
                 &.active {
                     .use-var(background, tabs-tab-bar-card-color);
                     .use-var(color, tabs-tab-bar-card-text-color);
-                    .text-medium-var(tabs-tab-bar-card-text-color);
+                    .text-medium();
                 }
 
                 &:not(:last-child) {
-                    .use-var(border-right, tabs-tab-bar-card-color, 1PX solid);
+                    .use-var-with-rtl(border-right, tabs-tab-bar-card-color, 1PX solid);
                 }
 
                 &:first-of-type {
-                    .use-var(border-top-left-radius, tabs-tab-bar-card-border-radius);
-                    .use-var(border-bottom-left-radius, tabs-tab-bar-card-border-radius);
+                    .use-var-with-rtl(border-top-left-radius, tabs-tab-bar-card-border-radius);
+                    .use-var-with-rtl(border-bottom-left-radius, tabs-tab-bar-card-border-radius);
                 }
 
                 &:last-of-type {
-                    .use-var(border-top-right-radius, tabs-tab-bar-card-border-radius);
-                    .use-var(border-bottom-right-radius, tabs-tab-bar-card-border-radius);
+                    .use-var-with-rtl(border-top-right-radius, tabs-tab-bar-card-border-radius);
+                    .use-var-with-rtl(border-bottom-right-radius, tabs-tab-bar-card-border-radius);
                 }
             }
 
@@ -361,20 +357,19 @@
 
             &.tag,
             &.tag-divide {
-                .use-var(margin-right, tabs-tab-bar-tag-gutter);
                 .use-var(padding, tabs-tab-bar-tag-padding);
                 .rem(border-radius, 100);
                 .use-var(background, tabs-tab-bar-tag-background);
                 .use-var(color, tabs-tab-bar-tag-text-color);
 
-                &.last {
-                    margin-right: 0;
+                &:not(.last) {
+                    .use-var-with-rtl(margin-right, tabs-tab-bar-tag-gutter);
                 }
 
                 &.active {
                     .use-var(background, tabs-tab-bar-tag-active-background);
                     .use-var(color, tabs-tab-bar-tag-active-text-color);
-                    .text-medium-var(tabs-tab-bar-tag-active-text-color);
+                    .text-medium();
                 }
             }
         }
@@ -384,7 +379,7 @@
         .use-var(height, tabs-tab-bar-horizontal-height);
 
         &.active {
-            .text-medium-var(tabs-tab-bar-line-active-color);
+            .text-medium();
             .use-var(color, tabs-tab-bar-line-active-color);
         }
     }
@@ -397,6 +392,11 @@
         align-items: flex-start;
         transition-property: all;
         transition-timing-function: ease-out;
+    }
+
+    &.mode-swipe-energy-saving {
+        position: relative;
+        overflow: hidden;
     }
 
     &.full-screen {

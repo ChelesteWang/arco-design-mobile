@@ -12,7 +12,7 @@ Enhanced img tag, provides a variety of image filling modes, and supports image 
 |----------|-------------|------|------|
 |style|Custom stylesheet|CSSProperties|-|
 |className|Custom classname|string|-|
-|status|The specified image state, valid when staticLabel=false|"loading" \| "loaded" \| "init" \| "error"|"init"|
+|status|The specified image state, valid when staticLabel=false|"loading" \| "loaded" \| "init" \| "error"|-|
 |src|Image resource|string|required|
 |width|Container width, when number is input, the default unit is px, if a string is input, the unit is accepted|ReactText|-|
 |height|Container height, when number is input, the default unit is px, if a string is input, the unit is accepted|ReactText|-|
@@ -52,11 +52,11 @@ Enhanced img tag, provides a variety of image filling modes, and supports image 
 > ImageStatus
 
 ```
-"loading"|"loaded"|"init"|"error"
+"loading" | "loaded" | "init" | "error"
 ```
 
 > ObjectPosition
 
 ```
-string|number|string & {}
+string | number | string & {}
 ```

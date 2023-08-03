@@ -63,10 +63,12 @@
         font-size: 0;
         opacity: 0;
         z-index: 1;
+        overflow: hidden;
 
         &.static-label,
         &.loaded,
-        &.error {
+        &.error,
+        &.has-loaded {
             opacity: 1;
         }
 
